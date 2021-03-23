@@ -1,0 +1,8 @@
+tensorflow
+mediapipe
+six
+protobuf
+opencv-python
+pandas
+numpy
+pymediainfo
