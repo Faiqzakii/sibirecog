@@ -9,7 +9,7 @@ import cv2
 from sign_detector import SignDetector
 from utils import get_word_list, get_root_project_path
 from dataframe_landmark import DataframeLandmark
-from video import VideoStream
+from streamer import VideoStream
 from displayer import display_image_landmark
 
 

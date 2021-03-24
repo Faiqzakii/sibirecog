@@ -4,8 +4,7 @@ import mediapipe as mp
 import cv2
 
 import displayer
-from camera import CameraStream
-from video import VideoStream
+from streamer import CameraStream, VideoStream
 from trainer import train_model_from_videos
 
 
