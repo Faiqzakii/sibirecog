@@ -25,8 +25,8 @@ def train_model_from_videos():
     mp_pose = mp.solutions.pose
     hands = mp_hands.Hands(min_detection_confidence=0.5, min_tracking_confidence=0.4, max_num_hands=2)
     pose = mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
-    model = SignDetector(train=True)
-    model.compile()
+    model = SignDetector()
+
     dataframes = []
     list_words = get_word_list()
     print("#"*100, "START - training")
@@ -77,7 +77,11 @@ def train_model_from_videos():
     for data in dataframes:
         merged_dataframe = merged_dataframe.append(data)
     targets = merged_dataframe.pop("target")
-    model.train(np.array(merged_dataframe), np.array(targets.values.tolist()))
+    model.train(np.array(merged_dataframe), np.array(targets.values.tolist()), epochs=250)
+
+    modelname = 'tes'
+    model.save(modelname=modelname)
+    print(f'Training model saved in ./model/{modelname}.h5')
 
 
 if __name__=="__main__":

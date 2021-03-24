@@ -42,11 +42,11 @@ class DataframeLandmark:
             cols.append(f"r_hand_dist_WRIST_{finger}")
 
         # relative distance with origin mean HEAD
-        for cpt in range(0, 21):
+        for cpt in range(0, 25):
             cols.append(f"l_hand_x_{cpt}")
             cols.append(f"l_hand_y_{cpt}")
             cols.append(f"l_hand_z_{cpt}")
-        for cpt in range(0, 21):
+        for cpt in range(0, 25):
             cols.append(f"r_hand_x_{cpt}")
             cols.append(f"r_hand_y_{cpt}")
             cols.append(f"r_hand_z_{cpt}")
@@ -69,9 +69,9 @@ class DataframeLandmark:
             np.array([pose_points[POSEMARK.RIGHT_EYE_INNER].x, pose_points[POSEMARK.RIGHT_EYE_INNER].y, pose_points[POSEMARK.RIGHT_EYE_INNER].z]),
             np.array([pose_points[POSEMARK.LEFT_EYE_INNER].x, pose_points[POSEMARK.LEFT_EYE_INNER].y, pose_points[POSEMARK.LEFT_EYE_INNER].z]),
             np.array([pose_points[POSEMARK.MOUTH_LEFT].x, pose_points[POSEMARK.MOUTH_LEFT].y,
-                     pose_points[POSEMARK.MOUTH_LEFT].z]),
+                    pose_points[POSEMARK.MOUTH_LEFT].z]),
             np.array([pose_points[POSEMARK.MOUTH_RIGHT].x, pose_points[POSEMARK.MOUTH_RIGHT].y,
-                     pose_points[POSEMARK.MOUTH_RIGHT].z])
+                    pose_points[POSEMARK.MOUTH_RIGHT].z])
         )
 
         if landmarks.get("left", False):
@@ -89,7 +89,7 @@ class DataframeLandmark:
             # COMPUTE WRIST DISTANCE
             for finger in FINGERS:
                 finger_tip = np.array([hand_points[HANDMARK[f"{finger}_TIP"]].x, hand_points[HANDMARK[f"{finger}_TIP"]].y,
-                                      hand_points[HANDMARK[f"{finger}_TIP"]].z])
+                                    hand_points[HANDMARK[f"{finger}_TIP"]].z])
                 row.append(compute_distance(finger_tip, wrist_point))
 
             # ADD RELATIVE COORDINATE FROM MEAN HEAD
@@ -107,10 +107,10 @@ class DataframeLandmark:
             for finger_a, finger_b in CARTESIAN_FINGERS:
                 point_a = np.array(
                     [hand_points[HANDMARK[f"{finger_a}_TIP"]].x, hand_points[HANDMARK[f"{finger_a}_TIP"]].y,
-                     hand_points[HANDMARK[f"{finger_a}_TIP"]].z])
+                    hand_points[HANDMARK[f"{finger_a}_TIP"]].z])
                 point_b = np.array(
                     [hand_points[HANDMARK[f"{finger_b}_TIP"]].x, hand_points[HANDMARK[f"{finger_b}_TIP"]].y,
-                     hand_points[HANDMARK[f"{finger_b}_TIP"]].z])
+                    hand_points[HANDMARK[f"{finger_b}_TIP"]].z])
                 dist = compute_distance(point_a, point_b)
                 row.append(dist)
 
@@ -118,7 +118,7 @@ class DataframeLandmark:
             for finger in FINGERS:
                 finger_tip = np.array(
                     [hand_points[HANDMARK[f"{finger}_TIP"]].x, hand_points[HANDMARK[f"{finger}_TIP"]].y,
-                     hand_points[HANDMARK[f"{finger}_TIP"]].z])
+                    hand_points[HANDMARK[f"{finger}_TIP"]].z])
                 row.append(compute_distance(finger_tip, wrist_point))
 
             # ADD RELATIVE COORDINATE FROM MEAN HEAD

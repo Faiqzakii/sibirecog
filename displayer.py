@@ -80,4 +80,4 @@ def display_image_landmark(image, hand_multi_landmarks, pose_landmarks, text=Non
         cv2.putText(image, text, (10, 450), cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 255, 0), 2, cv2.LINE_AA)
     cv2.imshow('MediaPipe Hands', image)
     if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+        pass

@@ -9,9 +9,12 @@ from utils import get_word_list
 
 class SignDetector:
     def __init__(self):
+        self.model = self.create_model()
+
+    def create_model(self):
         # Model tinggal diatur sesuai kebutuhan
         # Disini pake CNN biasa
-        self.model = tf.keras.models.Sequential([
+        model = tf.keras.models.Sequential([
             tf.keras.layers.Dropout(0.2),
             tf.keras.layers.Flatten(),
             tf.keras.layers.Dense(128, activation='relu'),
@@ -28,17 +31,21 @@ class SignDetector:
         #     tf.keras.layers.Dropout(0.2),
         #     tf.keras.layers.Dense(21, activation='relu')
         # ])
-
-    def load(self, filepath):
-        self.model = tf.keras.models.load_model(filepath)
-
-    def compile(self):
-        self.model.compile(optimizer='rmsprop',
+        model.compile(optimizer='rmsprop',
                            loss='sparse_categorical_crossentropy',
                            metrics=['accuracy'])
+        return model
+
+    def load(self, filepath):
+        self.model = tf.keras.models.load_model(filepath)        
+
+    def save(self, modelname='model'):
+        self.model.save(f'model/{modelname}.h5')
 
     def train(self, x_input, y_input, epochs=100):
-        self.model.fit(x_input, y_input, epochs=epochs, callbacks=[self.cp_callback])
+        #self.model.fit(x_input, y_input, epochs=epochs, callbacks=[self.cp_callback])
+        self.model.fit(x_input, y_input, epochs=epochs)
+        print(self.model.summary())
 
     def evaluate(self, x_input):
         probability_model = tf.keras.Sequential([
