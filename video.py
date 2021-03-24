@@ -16,6 +16,8 @@ class VideoStream:
     def get_images(self):
         while self.cap.isOpened() and self.is_on:
             ret, frame = self.cap.read()
+
+            self.width = self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)
             if ret:
                 image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 image.flags.writeable = False
@@ -31,6 +33,9 @@ class VideoStream:
     def close(self):
         self.is_on = False
         self.cap.release()
+
+    def getwidth(self):
+        return self.width
 
     def check_video(self):
         """

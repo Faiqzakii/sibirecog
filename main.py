@@ -12,9 +12,11 @@ from trainer import train_model_from_videos
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Sign to text: Command that parse a video stream and recognizes signs')
     parser.add_argument("-v", "--video", type=str, nargs='?', help='video input for testing')
+    parser.add_argument("-m", "--model", type=str, nargs='?', help='pretrained model')
     parser.add_argument("-t", '--train', action="store_true", help='train or test')
     parser.add_argument("-n", "--no-evaluate", action="store_true")
     args = parser.parse_args()
+    print(args)
 
     # init stream
     if args.video:
@@ -32,4 +34,4 @@ if __name__ == "__main__":
     if args.train:
         train_model_from_videos()
     else:
-        displayer.display_evaluate_from_stream(stream, mp_pose, mp_hands)
+        displayer.display_evaluate_from_stream(stream, mp_pose, mp_hands, args.model)

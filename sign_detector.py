@@ -8,8 +8,10 @@ from utils import get_word_list
 
 
 class SignDetector:
-    def __init__(self):
-        self.model = self.create_model()
+    def __init__(self, filepath=None):
+        self.model = self.create_model() 
+        if filepath is not None: self.model = self.load((filepath))
+        
 
     def create_model(self):
         # Model tinggal diatur sesuai kebutuhan
@@ -37,7 +39,8 @@ class SignDetector:
         return model
 
     def load(self, filepath):
-        self.model = tf.keras.models.load_model(filepath)        
+        model = tf.keras.models.load_model(filepath)
+        return model
 
     def save(self, modelname='model'):
         self.model.save(f'model/{modelname}.h5')
@@ -48,18 +51,19 @@ class SignDetector:
         print(self.model.summary())
 
     def evaluate(self, x_input):
-        probability_model = tf.keras.Sequential([
-            self.model,
-            tf.keras.layers.Softmax()
-        ])
-        res = probability_model(x_input)
+        # probability_model = tf.keras.Sequential([
+        #     self.model,
+        #     tf.keras.layers.Softmax()
+        # ])
+        probability_model = self.model
+        res = probability_model.predict(x_input)
         word_list = get_word_list()
         word_max_predict = {}
         for word in word_list:
             word_max_predict[word] = 0
         for predict in res:
             word_max_predict[word_list[np.argmax(predict)]] += 1
-        print(word_max_predict)
-        print(res)
+        # print(word_max_predict)
+        # print(res)
         choosen_word = max(word_max_predict.items(), key=operator.itemgetter(1))[0]
         return choosen_word
