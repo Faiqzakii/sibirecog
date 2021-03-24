@@ -29,10 +29,10 @@ def train_model_from_videos():
 
     dataframes = []
     list_words = get_word_list()
-    print("#"*100, "START - training")
+    print('{:#^100}'.format(" START - training "))
 
     for word_idx in range(0, len(list_words)):
-        print("############### START - Train word:", list_words[word_idx])
+        print('{:#^100}'.format(f" START - Train word: {list_words[word_idx]} "))
 
         for file_path in get_video_list(os.path.join(get_root_project_path(), "data", "video", list_words[word_idx])):
             print("START - video", file_path)
@@ -69,8 +69,8 @@ def train_model_from_videos():
             #print(dataframe)
 
             print("END - video", file_path)
-        print("############### END - Train word:", list_words[word_idx])
-    print("#"*100, "END - training")
+        print('{:#^100}'.format(f" END - Train word: {list_words[word_idx]} "))
+    print('{:#^100}'.format(" END - training "))
     
     # merge dataframes
     merged_dataframe = pd.DataFrame([], columns=dataframes[0].columns.values)

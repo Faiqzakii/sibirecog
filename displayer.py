@@ -48,12 +48,12 @@ def display_evaluate_from_stream(stream, mp_pose, mp_hands, model):
         img.flags.writeable = True
         if results_hands.multi_hand_landmarks and results_pose.pose_landmarks:
             dfl.append_landmarks(results_hands, results_pose)
-    print(len(dfl))
+    
     dataframe = dfl.get_dataframe()
     predicted_word = model.evaluate(np.array(dataframe))
-    print('#' * 100)
-    print('#' * 25, "Prediction:", predicted_word, '#' * 25)
-    print('#' * 100)
+    print('#'*50)
+    print('{:#^50}'.format(f" Prediction:{predicted_word} "))
+    print('#'*50)
 
     stream.open()
     for img in stream.get_images():
