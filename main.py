@@ -15,7 +15,6 @@ if __name__ == "__main__":
     parser.add_argument("-t", '--train', action="store_true", help='train or test')
     parser.add_argument("-n", "--no-evaluate", action="store_true")
     args = parser.parse_args()
-    print(args)
 
     # init stream
     if args.video:
