@@ -50,7 +50,7 @@ def display_evaluate_from_stream(stream, mp_pose, mp_hands, model):
             dfl.append_landmarks(results_hands, results_pose)
     
     dataframe = dfl.get_dataframe()
-    predicted_word = model.evaluate(np.array(dataframe))
+    predicted_word, prob = model.evaluate(np.array(dataframe))
     print('#'*50)
     print('{:#^50}'.format(f" Prediction:{predicted_word} "))
     print('#'*50)
@@ -60,13 +60,13 @@ def display_evaluate_from_stream(stream, mp_pose, mp_hands, model):
         results_hands = hands.process(img)
         results_pose = pose.process(img)
         if results_hands.multi_hand_landmarks and results_pose.pose_landmarks:
-            display_image_landmark(img, results_hands.multi_hand_landmarks, results_pose.pose_landmarks, text=predicted_word, width=stream.getwidth())
+            display_image_landmark(img, results_hands.multi_hand_landmarks, results_pose.pose_landmarks, word=predicted_word, prob=prob, width=stream.getwidth())
     stream.close()
     hands.close()
     pose.close()
 
 
-def display_image_landmark(image, hand_multi_landmarks, pose_landmarks, text=None, width=0):
+def display_image_landmark(image, hand_multi_landmarks, pose_landmarks, word=None, prob=None, width=0):
     mp_drawing = mp.solutions.drawing_utils
     mp_hands = mp.solutions.hands
     mp_pose = mp.solutions.pose
@@ -76,8 +76,8 @@ def display_image_landmark(image, hand_multi_landmarks, pose_landmarks, text=Non
             image, hand_landmark, mp_hands.HAND_CONNECTIONS)
     mp_drawing.draw_landmarks(
         image, pose_landmarks, mp_pose.POSE_CONNECTIONS)
-    if text is not None:
-        cv2.putText(image, text, (int(width/3), 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
+    if word is not None:
+        cv2.putText(image, f'{word} : {prob:.3f}', (int(width/5), 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2, cv2.LINE_AA)
     cv2.imshow('MediaPipe Hands', image)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         pass

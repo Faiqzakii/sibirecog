@@ -45,15 +45,12 @@ class DataframeLandmark:
         for cpt in range(0, 25):
             cols.append(f"l_hand_x_{cpt}")
             cols.append(f"l_hand_y_{cpt}")
-            cols.append(f"l_hand_z_{cpt}")
         for cpt in range(0, 25):
             cols.append(f"r_hand_x_{cpt}")
             cols.append(f"r_hand_y_{cpt}")
-            cols.append(f"r_hand_z_{cpt}")
         for cpt in range(0, 25):
             cols.append(f"pose_x_{cpt}")
             cols.append(f"pose_y_{cpt}")
-            cols.append(f"pose_z_{cpt}")
         return cols
 
     def append_landmarks(self, results_hand, results_pose):
@@ -66,70 +63,58 @@ class DataframeLandmark:
         landmarks = dict(zip(hands, results_hand.multi_hand_landmarks))
 
         mean_head = get_mean(
-            np.array([pose_points[POSEMARK.RIGHT_EYE_INNER].x, pose_points[POSEMARK.RIGHT_EYE_INNER].y, pose_points[POSEMARK.RIGHT_EYE_INNER].z]),
-            np.array([pose_points[POSEMARK.LEFT_EYE_INNER].x, pose_points[POSEMARK.LEFT_EYE_INNER].y, pose_points[POSEMARK.LEFT_EYE_INNER].z]),
-            np.array([pose_points[POSEMARK.MOUTH_LEFT].x, pose_points[POSEMARK.MOUTH_LEFT].y,
-                    pose_points[POSEMARK.MOUTH_LEFT].z]),
-            np.array([pose_points[POSEMARK.MOUTH_RIGHT].x, pose_points[POSEMARK.MOUTH_RIGHT].y,
-                    pose_points[POSEMARK.MOUTH_RIGHT].z])
+            np.array([pose_points[POSEMARK.RIGHT_EYE_INNER].x, pose_points[POSEMARK.RIGHT_EYE_INNER].y]),
+            np.array([pose_points[POSEMARK.LEFT_EYE_INNER].x, pose_points[POSEMARK.LEFT_EYE_INNER].y]),
+            np.array([pose_points[POSEMARK.MOUTH_LEFT].x, pose_points[POSEMARK.MOUTH_LEFT].y]),
+            np.array([pose_points[POSEMARK.MOUTH_RIGHT].x, pose_points[POSEMARK.MOUTH_RIGHT].y])
         )
 
         if landmarks.get("left", False):
             hand_points = landmarks["left"].ListFields()[0][1]
-            wrist_point = np.array([hand_points[HANDMARK.WRIST].x, hand_points[HANDMARK.WRIST].y, hand_points[HANDMARK.WRIST].z])
+            wrist_point = np.array([hand_points[HANDMARK.WRIST].x, hand_points[HANDMARK.WRIST].y])
             # COMPUTE DISTANCE BETWEEN FINGER TIPS
             for finger_a, finger_b in CARTESIAN_FINGERS:
-                point_a = np.array([hand_points[HANDMARK[f"{finger_a}_TIP"]].x, hand_points[HANDMARK[f"{finger_a}_TIP"]].y,
-                                    hand_points[HANDMARK[f"{finger_a}_TIP"]].z])
-                point_b = np.array([hand_points[HANDMARK[f"{finger_b}_TIP"]].x, hand_points[HANDMARK[f"{finger_b}_TIP"]].y,
-                                    hand_points[HANDMARK[f"{finger_b}_TIP"]].z])
+                point_a = np.array([hand_points[HANDMARK[f"{finger_a}_TIP"]].x, hand_points[HANDMARK[f"{finger_a}_TIP"]].y])
+                point_b = np.array([hand_points[HANDMARK[f"{finger_b}_TIP"]].x, hand_points[HANDMARK[f"{finger_b}_TIP"]].y])
                 dist = compute_distance(point_a, point_b)
                 row.append(dist)
 
             # COMPUTE WRIST DISTANCE
             for finger in FINGERS:
-                finger_tip = np.array([hand_points[HANDMARK[f"{finger}_TIP"]].x, hand_points[HANDMARK[f"{finger}_TIP"]].y,
-                                    hand_points[HANDMARK[f"{finger}_TIP"]].z])
+                finger_tip = np.array([hand_points[HANDMARK[f"{finger}_TIP"]].x, hand_points[HANDMARK[f"{finger}_TIP"]].y])
                 row.append(compute_distance(finger_tip, wrist_point))
 
             # ADD RELATIVE COORDINATE FROM MEAN HEAD
             for landmark in landmarks["left"].ListFields()[0][1]:
-                row += [landmark.x - mean_head[0], landmark.y - mean_head[1], landmark.z - mean_head[2]]
+                row += [landmark.x - mean_head[0], landmark.y - mean_head[1]]
 
         else:
-            row += np.zeros(15 + 3 * 21).tolist() # 15 frame, 3 dimensi xyz, 21 kombinasi landmark tangan
+            row += np.zeros(self.nb_frames + 2 * 21).tolist() # 15 frame, 2 dimensi xy, 21 kombinasi landmark tangan + pergelangan
 
         if landmarks.get("right", False):
             hand_points = landmarks["right"].ListFields()[0][1]
-            wrist_point = np.array(
-                [hand_points[HANDMARK.WRIST].x, hand_points[HANDMARK.WRIST].y, hand_points[HANDMARK.WRIST].z])
+            wrist_point = np.array([hand_points[HANDMARK.WRIST].x, hand_points[HANDMARK.WRIST].y])
             # COMPUTE DISTANCE BETWEEN FINGER TIPS
             for finger_a, finger_b in CARTESIAN_FINGERS:
-                point_a = np.array(
-                    [hand_points[HANDMARK[f"{finger_a}_TIP"]].x, hand_points[HANDMARK[f"{finger_a}_TIP"]].y,
-                    hand_points[HANDMARK[f"{finger_a}_TIP"]].z])
-                point_b = np.array(
-                    [hand_points[HANDMARK[f"{finger_b}_TIP"]].x, hand_points[HANDMARK[f"{finger_b}_TIP"]].y,
-                    hand_points[HANDMARK[f"{finger_b}_TIP"]].z])
+                point_a = np.array([hand_points[HANDMARK[f"{finger_a}_TIP"]].x, hand_points[HANDMARK[f"{finger_a}_TIP"]].y])
+                point_b = np.array([hand_points[HANDMARK[f"{finger_b}_TIP"]].x, hand_points[HANDMARK[f"{finger_b}_TIP"]].y])
                 dist = compute_distance(point_a, point_b)
                 row.append(dist)
 
             # COMPUTE WRIST DISTANCE
             for finger in FINGERS:
-                finger_tip = np.array(
-                    [hand_points[HANDMARK[f"{finger}_TIP"]].x, hand_points[HANDMARK[f"{finger}_TIP"]].y,
-                    hand_points[HANDMARK[f"{finger}_TIP"]].z])
+                finger_tip = np.array([hand_points[HANDMARK[f"{finger}_TIP"]].x, hand_points[HANDMARK[f"{finger}_TIP"]].y])
                 row.append(compute_distance(finger_tip, wrist_point))
 
             # ADD RELATIVE COORDINATE FROM MEAN HEAD
             for landmark in landmarks["right"].ListFields()[0][1]:
-                row += [landmark.x - mean_head[0], landmark.y - mean_head[1], landmark.z - mean_head[2]]
+                row += [landmark.x - mean_head[0], landmark.y - mean_head[1]]
         else:
-            row += np.zeros(15 + 3 * 21).tolist()
+            row += np.zeros(self.nb_frames + 2 * 21).tolist()
 
         # pose landmarks process
         for landmark in pose_points:
-            row += [landmark.x, landmark.y, landmark.z]
+            row += [landmark.x, landmark.y]
 
         self.rows.append(row)
         self.tmp_cols.append(tmp_row)

@@ -7,20 +7,12 @@ import pandas as pd
 import cv2
 
 from sign_detector import SignDetector
-from utils import get_word_list, get_root_project_path
+from utils import get_word_list, get_root_project_path, get_video_list
 from dataframe_landmark import DataframeLandmark
 from streamer import VideoStream
 from displayer import display_image_landmark
 
-
-def get_video_list(parent_dir):
-    file_paths = []
-    for file in os.listdir(parent_dir):
-        file_paths.append(os.path.join(parent_dir, file))
-    return file_paths
-
-
-def train_model_from_videos():
+def train_model_from_videos(modelname='tes'):
     mp_hands = mp.solutions.hands
     mp_pose = mp.solutions.pose
     hands = mp_hands.Hands(min_detection_confidence=0.5, min_tracking_confidence=0.4, max_num_hands=2)
@@ -55,7 +47,7 @@ def train_model_from_videos():
                 if results_hands.multi_hand_landmarks and results_pose.pose_landmarks:
                     dfl_flip.append_landmarks(results_hands, results_pose)
                     # display_image_landmark(flip_image, results_hands.multi_hand_landmarks, results_pose.pose_landmarks)
-            
+
             stream.close()
             df = dfl.get_dataframe()
             df_flip = dfl_flip.get_dataframe()
@@ -65,8 +57,6 @@ def train_model_from_videos():
             if df_flip is not None:
                 df_flip["target"] = word_idx
                 dataframes.append(df_flip)
-            
-            #print(dataframe)
 
             print("END - video", file_path)
         print('{:#^100}'.format(f" END - Train word: {list_words[word_idx]} "))
@@ -76,13 +66,9 @@ def train_model_from_videos():
     merged_dataframe = pd.DataFrame([], columns=dataframes[0].columns.values)
     for data in dataframes:
         merged_dataframe = merged_dataframe.append(data)
+    merged_dataframe.to_csv('./data/tes.csv')
     targets = merged_dataframe.pop("target")
     model.train(np.array(merged_dataframe), np.array(targets.values.tolist()), epochs=250)
 
-    modelname = 'tes'
     model.save(modelname=modelname)
     print(f'Training model saved in ./model/{modelname}.h5')
-
-
-if __name__=="__main__":
-    train_model_from_videos()

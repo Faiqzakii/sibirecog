@@ -16,6 +16,16 @@ def get_word_list():
             word_list.append(line.replace("\n", ""))
     return word_list
 
+def get_video_list(_dir):
+    """
+        setiap kata dijadikan folder sendiri sendiri pada directory ./video
+        return: list
+    """
+    file_paths = []
+    for file in os.listdir(_dir):
+        file_paths.append(os.path.join(_dir, file))
+    return file_paths
+
 def compute_distance(point_a, point_b):
     """
         Cartesian Distance
@@ -24,7 +34,6 @@ def compute_distance(point_a, point_b):
 
 def get_mean(*args):
     """
-        [mean_x, mean_y, mean_z]
+        [mean_x, mean_y]
     """
-    return np.array([sum([elem[0] for elem in args])/len(args), sum([elem[1] for elem in args])/len(args),
-           sum([elem[2] for elem in args])/len(args)])
+    return np.array([sum([elem[0] for elem in args])/len(args), sum([elem[1] for elem in args])/len(args)])

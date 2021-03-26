@@ -62,8 +62,9 @@ class SignDetector:
         for word in word_list:
             word_max_predict[word] = 0
         for predict in res:
+            prob = predict[np.argmax(predict)]
             word_max_predict[word_list[np.argmax(predict)]] += 1
         # print(word_max_predict)
         # print(res)
         choosen_word = max(word_max_predict.items(), key=operator.itemgetter(1))[0]
-        return choosen_word
+        return choosen_word, prob
