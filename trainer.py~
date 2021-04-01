@@ -54,9 +54,9 @@ def train_model_from_videos(modelname='tes', epoch=250):
             if df is not None:
                 df["target"] = word_idx
                 dataframes.append(df)
-            if df_flip is not None:
-                df_flip["target"] = word_idx
-                dataframes.append(df_flip)
+            #if df_flip is not None:
+            #    df_flip["target"] = word_idx
+            #    dataframes.append(df_flip)
 
             print("END - video", file_path)
         print('{:#^100}'.format(f" END - Train word: {list_words[word_idx]} "))

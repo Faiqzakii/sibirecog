@@ -11,7 +11,7 @@ def run_simple():
     handsd = mp_hands.Hands(
         min_detection_confidence=0.7, min_tracking_confidence=0.5)
     pose = mp_pose.Pose(min_detection_confidence=0.7, min_tracking_confidence=0.5)
-    cap = cv2.VideoCapture('./test/kapan_t.mp4')
+    cap = cv2.VideoCapture('./test/siapa_t.mp4')
     while cap.isOpened():
         success, image = cap.read()
         x = cap.get(cv2.CAP_PROP_FRAME_WIDTH)

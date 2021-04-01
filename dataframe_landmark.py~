@@ -120,8 +120,6 @@ class DataframeLandmark:
         self.tmp_cols.append(tmp_row)
 
     def get_dataframe(self):
-        if len(self.rows)==0:
-            raise Exception('Nothing detected')
         if len(self.rows) < self.nb_frames:
             cpt = 0
             while len(self.rows) < self.nb_frames:

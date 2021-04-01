@@ -42,4 +42,4 @@ if __name__ == "__main__":
             mpath = './model/' + args.model
         else:
             mpath = args.model
-        displayer.display_evaluate_from_stream(stream, mp_pose, mp_hands, mpath)
+        displayer.display_evaluate_from_stream(stream, mp_pose, mp_hands, args.model)

@@ -13,7 +13,6 @@ class VideoStream:
 
         self.is_on = False
         self.cap = None
-        
 
     def get_images(self):
         while self.cap.isOpened() and self.is_on:
@@ -40,14 +39,10 @@ class VideoStream:
         return self.width
 
     def check_video(self):
-        """
-        Check if the video path is readable by parsing media info
-        """
         if not os.path.isfile(self.video_path):
             raise Exception(f"The specified file doesn't exist: {self.video_path}")
-        media_info = MediaInfo.parse(self.video_path)
-        if len(media_info.video_tracks) == 0 or not media_info.video_tracks[0].track_type == "Video":
-            raise Exception(f"The specified file is not a video: {self.video_path}")
+        if 'mp4' not in self.video_path:
+            raise Exception(f"The specified file is not an mp4 video: {self.video_path}")
 
 class CameraStream:
     def __init__(self):
