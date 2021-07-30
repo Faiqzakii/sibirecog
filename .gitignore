@@ -146,3 +146,18 @@ asda.py
 tes.py
 *.csv
 *.h5
+workspace.code-workspace
+*.bat
+*.xlsx
+
+# Image
+*.jpg
+*.png
+*.gif
+
+*.json
+*.ipynb_checkpoints
+*.ipynb
+*.yaml
+*.csv~
+*.wandb

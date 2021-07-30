@@ -1,7 +1,6 @@
 import os
 
 import cv2
-from pymediainfo import MediaInfo
 from threading import Thread
 from queue import Queue
 
@@ -19,7 +18,10 @@ class VideoStream:
             ret, frame = self.cap.read()
 
             self.width = self.cap.get(cv2.CAP_PROP_FRAME_WIDTH)
+            self.height = self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
+            
             if ret:
+                frame = cv2.resize(frame, (int(self.width/3), int(self.height/3)))
                 image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 image.flags.writeable = False
                 yield image
@@ -38,6 +40,9 @@ class VideoStream:
     def getwidth(self):
         return self.width
 
+    def get_path(self):
+        return self.video_path
+        
     def check_video(self):
         if not os.path.isfile(self.video_path):
             raise Exception(f"The specified file doesn't exist: {self.video_path}")

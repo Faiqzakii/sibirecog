@@ -36,28 +36,18 @@ class DataframeLandmark:
 
         for finger_a, finger_b in CARTESIAN_FINGERS:
             cols.append(f"l_hand_dist_TIP_{finger_a}_{finger_b}") #10
-            cols.append(f"l_hand_dist_MCP_{finger_a}_{finger_b}") #10
         for finger in FINGERS:
             cols.append(f"l_hand_dist_WRIST_TIP_{finger}") #5
-            cols.append(f"l_hand_dist_WRIST_MCP_{finger}") #5
         for finger in FINGERS:
-            cols.append(f"l_hand_dist_HEAD_TIP_{finger}")   #5
-            cols.append(f"l_hand_dist_HEAD_MCP_{finger}")   #5
-        for finger in FINGERS:
-            cols.append(f"l_hand_dist_TIP_MCP_{finger}")
+            cols.append(f"l_hand_dist_HEAD_TIP_{finger}")  #5
             
             
         for finger_a, finger_b in CARTESIAN_FINGERS:
             cols.append(f"r_hand_dist_TIP_{finger_a}_{finger_b}") # 10
-            cols.append(f"r_hand_dist_MCP_{finger_a}_{finger_b}") # 10
         for finger in FINGERS:
             cols.append(f"r_hand_dist_WRIST_TIP_{finger}") #5
-            cols.append(f"r_hand_dist_WRIST_MCP_{finger}") #5
         for finger in FINGERS:
-            cols.append(f"r_hand_dist_HEAD_TIP_{finger}")   #5
-            cols.append(f"r_hand_dist_HEAD_MCP_{finger}")   #5
-        for finger in FINGERS:
-            cols.append(f"r_hand_dist_TIP_MCP_{finger}")
+            cols.append(f"r_hand_dist_HEAD_TIP_{finger}")  #5
       
         return cols
 
@@ -86,33 +76,19 @@ class DataframeLandmark:
                 point_b = np.array([hand_points[HANDMARK[f"{finger_b}_TIP"]].x, hand_points[HANDMARK[f"{finger_b}_TIP"]].y])
                 dist = compute_distance(point_a, point_b)
                 row.append(dist)
-                point_a = np.array([hand_points[HANDMARK[f"{finger_a}_MCP"]].x, hand_points[HANDMARK[f"{finger_a}_MCP"]].y])
-                point_b = np.array([hand_points[HANDMARK[f"{finger_b}_MCP"]].x, hand_points[HANDMARK[f"{finger_b}_MCP"]].y])
-                dist = compute_distance(point_a, point_b)
-                row.append(dist)
 
             # COMPUTE WRIST DISTANCE
             for finger in FINGERS: #5 * 2
                 finger_tip = np.array([hand_points[HANDMARK[f"{finger}_TIP"]].x, hand_points[HANDMARK[f"{finger}_TIP"]].y])
                 row.append(compute_distance(finger_tip, wrist_point))
-                finger_mcp = np.array([hand_points[HANDMARK[f"{finger}_MCP"]].x, hand_points[HANDMARK[f"{finger}_MCP"]].y])
-                row.append(compute_distance(finger_mcp, wrist_point))
 
             # ADD DISTANCE FROM MEAN HEAD
             for finger in FINGERS: #5 * 2
                 finger_tip = np.array([hand_points[HANDMARK[f"{finger}_TIP"]].x, hand_points[HANDMARK[f"{finger}_TIP"]].y])
                 row.append(compute_distance(finger_tip, mean_head))
-                finger_mcp = np.array([hand_points[HANDMARK[f"{finger}_MCP"]].x, hand_points[HANDMARK[f"{finger}_MCP"]].y])
-                row.append(compute_distance(finger_mcp, mean_head))
-                
-            # ADD DISTANCE FROM MCP TO TIP
-            for finger in FINGERS: #5
-                finger_tip = np.array([hand_points[HANDMARK[f"{finger}_TIP"]].x, hand_points[HANDMARK[f"{finger}_TIP"]].y])
-                finger_mcp = np.array([hand_points[HANDMARK[f"{finger}_MCP"]].x, hand_points[HANDMARK[f"{finger}_MCP"]].y])
-                row.append(compute_distance(finger_mcp, finger_tip))
 
         else:
-            row += np.zeros(20 + 10 + 10 + 5).tolist() 
+            row += np.zeros(10 + 5 + 5).tolist() 
 
         if landmarks.get("right", False):
             hand_points = landmarks["right"].ListFields()[0][1]
@@ -123,33 +99,19 @@ class DataframeLandmark:
                 point_b = np.array([hand_points[HANDMARK[f"{finger_b}_TIP"]].x, hand_points[HANDMARK[f"{finger_b}_TIP"]].y])
                 dist = compute_distance(point_a, point_b)
                 row.append(dist)
-                point_a = np.array([hand_points[HANDMARK[f"{finger_a}_MCP"]].x, hand_points[HANDMARK[f"{finger_a}_MCP"]].y])
-                point_b = np.array([hand_points[HANDMARK[f"{finger_b}_MCP"]].x, hand_points[HANDMARK[f"{finger_b}_MCP"]].y])
-                dist = compute_distance(point_a, point_b)
-                row.append(dist)
 
             # COMPUTE WRIST DISTANCE
             for finger in FINGERS: #5 * 2
                 finger_tip = np.array([hand_points[HANDMARK[f"{finger}_TIP"]].x, hand_points[HANDMARK[f"{finger}_TIP"]].y])
                 row.append(compute_distance(finger_tip, wrist_point))
-                finger_mcp = np.array([hand_points[HANDMARK[f"{finger}_MCP"]].x, hand_points[HANDMARK[f"{finger}_MCP"]].y])
-                row.append(compute_distance(finger_mcp, wrist_point))
 
             # ADD DISTANCE FROM MEAN HEAD
             for finger in FINGERS: #5 * 2
                 finger_tip = np.array([hand_points[HANDMARK[f"{finger}_TIP"]].x, hand_points[HANDMARK[f"{finger}_TIP"]].y])
                 row.append(compute_distance(finger_tip, mean_head))
-                finger_mcp = np.array([hand_points[HANDMARK[f"{finger}_MCP"]].x, hand_points[HANDMARK[f"{finger}_MCP"]].y])
-                row.append(compute_distance(finger_mcp, mean_head))
-                
-            # ADD DISTANCE FROM MCP TO TIP
-            for finger in FINGERS: #5
-                finger_tip = np.array([hand_points[HANDMARK[f"{finger}_TIP"]].x, hand_points[HANDMARK[f"{finger}_TIP"]].y])
-                finger_mcp = np.array([hand_points[HANDMARK[f"{finger}_MCP"]].x, hand_points[HANDMARK[f"{finger}_MCP"]].y])
-                row.append(compute_distance(finger_mcp, finger_tip))
 
         else:
-            row += np.zeros(20 + 10 + 10 + 5).tolist()
+            row += np.zeros(10 + 5 + 5).tolist()
         
         self.rows.append(row)
         self.tmp_cols.append(tmp_row)
